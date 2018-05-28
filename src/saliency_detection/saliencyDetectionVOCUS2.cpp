@@ -1,5 +1,7 @@
-//===================================================================================
-// Ported from Robot Operating System library
+/*
+* Developed by Tung Dang, University of Nevada, Reno.
+* Ported from Robot Operating System library.
+*/
 
 #include <saliency_detection/saliencyDetectionVOCUS2.h>
 

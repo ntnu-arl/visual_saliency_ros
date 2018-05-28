@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Eigen3 REQUIRED)
 find_package(PCL REQUIRED)
-find_package(OpenCV 2.4.8)
+find_package(OpenCV 2.4 REQUIRED)
 find_package(Boost COMPONENTS serialization REQUIRED)
 
 message(${OpenCV_DIR})
@@ -50,7 +50,3 @@ catkin_package(
 # Saliency detection
 add_executable(saliencyDetectionVOCUS2 src/saliency_detection/saliencyDetectionVOCUS2.cpp VOCUS2/src/VOCUS2.cpp)
 target_link_libraries(saliencyDetectionVOCUS2 ${catkin_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
-
-
-
-
