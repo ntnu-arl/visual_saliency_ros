@@ -12,9 +12,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   tf
-	cv_bridge
-	image_transport
-	image_geometry
+  cv_bridge
+  image_transport
+  image_geometry
 )
 
 find_package(Eigen3 REQUIRED)
@@ -28,18 +28,18 @@ include_directories(
   include
   include/saliency_detection
   VOCUS2/src
-	${catkin_INCLUDE_DIRS}
-	${EIGEN3_INCLUDE_DIR}
-	${PCL_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
+  ${PCL_INCLUDE_DIRS}
   $(Boost_INCLUDE_DIRS)
-  )
+)
 
 generate_messages(
-   DEPENDENCIES
-   std_msgs
-   sensor_msgs
-   nav_msgs
-   geometry_msgs
+  DEPENDENCIES
+  std_msgs
+  sensor_msgs
+  nav_msgs
+  geometry_msgs
 )
 
 catkin_package(
@@ -48,5 +48,11 @@ catkin_package(
 )
 
 # Saliency detection
-add_executable(saliencyDetectionVOCUS2 src/saliency_detection/saliencyDetectionVOCUS2.cpp VOCUS2/src/VOCUS2.cpp)
-target_link_libraries(saliencyDetectionVOCUS2 ${catkin_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+add_executable(SaliencyDetection
+  src/saliency_detection/saliency_node.cpp
+  src/saliency_detection/saliency_detection.cpp
+  VOCUS2/src/VOCUS2.cpp
+  src/saliency_detection/saliency_Itti.cpp
+  src/saliency_detection/cvgabor.cpp
+  src/saliency_detection/saliency_Hou.cpp)
+target_link_libraries(SaliencyDetection ${catkin_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
