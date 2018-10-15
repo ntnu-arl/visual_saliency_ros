@@ -53,9 +53,7 @@ public:
     SalDet.Init(&SalConf);
   }
 
-  ~SaliencyNode() {
-    nh_.shutdown();
-  }
+  ~SaliencyNode() { nh_.shutdown(); }
 };
 
 #endif // SALIENCY_NODE_H_

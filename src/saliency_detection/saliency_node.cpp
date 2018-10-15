@@ -7,8 +7,7 @@ void SaliencyNode::ImageCb(const sensor_msgs::ImageConstPtr &msg_ptr) {
   cv::Mat image_proc;
 
   try {
-    cv_ptr =
-        cv_bridge::toCvCopy(msg_ptr, sensor_msgs::image_encodings::BGR8);
+    cv_ptr = cv_bridge::toCvCopy(msg_ptr, sensor_msgs::image_encodings::BGR8);
   } catch (cv_bridge::Exception &e) {
     ROS_ERROR("cv_bridge exception: %s", e.what());
   }
@@ -17,7 +16,7 @@ void SaliencyNode::ImageCb(const sensor_msgs::ImageConstPtr &msg_ptr) {
   cv::Mat sal_map(image_proc.rows, image_proc.cols, CV_8UC1,
                   cv::Scalar::all(0));
   cv::Mat sal_map_norm(image_proc.rows, image_proc.cols, CV_8UC1,
-                      cv::Scalar::all(0));
+                       cv::Scalar::all(0));
 
   if (SalDet.Compute(image_proc, sal_map, sal_map_norm, true)) {
     sal_map.convertTo(sal_map, CV_8UC1, 255);

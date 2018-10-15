@@ -5,10 +5,10 @@
 #ifndef SALIENCY_DETECTION_H_
 #define SALIENCY_DETECTION_H_
 
-#include <ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/Point.h>
 #include <image_transport/image_transport.h>
+#include <ros/ros.h>
 #include <sensor_msgs/fill_image.h>
 
 #include <opencv/cv.h>
