@@ -327,7 +327,6 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "saliencymap");
 
 	saliencyMapVOCUS2 salmapVOCUS2;
-	salmapVOCUS2.init();
 
 	ros::spin();
 
