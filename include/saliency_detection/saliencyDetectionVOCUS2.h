@@ -51,6 +51,11 @@ public:
         std::cout << "Threshold precentage: " << thres << '\n';
         thresholdPercent = ((thres <= 1) && (thres >= 0)) ? thres : 1;
 
+        double thres_saliency;
+        nh_.param<double>("threshold_saliency", thres_saliency, 0.001);
+        std::cout << "Threshold saliency: " << thres_saliency << '\n';
+        thresholdSaliency = ((thres_saliency <= 1) && (thres_saliency >= 0)) ? thres_saliency : 0.001;
+
         topcut_enable = false;
         nh_.param<bool>("topcut_enable", topcut_enable, false);
         std::cout << "Cut image: " << topcut_enable << '\n';
@@ -110,6 +115,7 @@ private:
       VOCUS2     saliencyAlgorithm;
       float      calculateTime;
       double thresholdPercent;
+      double thresholdSaliency;
 
       void imageCB(const sensor_msgs::ImageConstPtr& msg_ptr);
       void init(void);

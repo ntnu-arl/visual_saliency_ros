@@ -114,29 +114,15 @@ bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst)
 	clock_t t1, t2;
 	t1 = clock();
 
-	//Create the rectangle
-	cv::Rect roi(0, topcut_pixels, src.cols, src.rows - topcut_pixels);
-	//Create the cv::Mat with the ROI you need, where "image" is the cv::Mat you want to extract the ROI from
-	cv::Mat src_roi = src(roi);
-
-	// cv::Mat sub_img;
-	// if (topcut_enable){
-	// 	sub_img = src(cv::Range(0, 100), cv::Range(0, 100));
-	// }
-
-	stringstream image_write_name;
-	image_write_name << testFolder << "image_cut" << testImage;
-	cv::imwrite(image_write_name.str(), src_roi);
-
 	// resize image
-	Mat im_resize = src_roi.clone();
-	Size im_size_full(src_roi.cols, src_roi.rows);
+	Mat im_resize = src.clone();
+	Size im_size_full(src.cols, src.rows);
 	if (resizePercent < 1)
-  {
-    Size im_size(int((float)src_roi.cols * resizePercent),
-		              int((float)src_roi.rows * resizePercent));
-    resize(src_roi, im_resize, im_size, 0, 0);
-  }
+	{
+		Size im_size(int((float)src.cols * resizePercent),
+						int((float)src.rows * resizePercent));
+		resize(src, im_resize, im_size, 0, 0);
+	}
 
 	saliencyAlgorithm.process(im_resize);
 
@@ -147,6 +133,10 @@ bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst)
 		dst = saliencyAlgorithm.get_salmap();
 
 	double minVal, maxVal;
+	// threshold here
+	threshold( dst, dst, thresholdSaliency, maxVal, cv::THRESH_TOZERO);
+
+	// scale the image to range [0,1]
 	minMaxLoc(dst, &minVal, &maxVal, NULL, NULL);
 	if (maxVal != minVal)
 		dst.convertTo(dst, CV_32FC1, 1.0/(maxVal-minVal), -minVal/(maxVal-minVal)); // scale the image
@@ -155,8 +145,6 @@ bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst)
 	if (resizePercent < 1){
 		resize(dst, dst, im_size_full, 0, 0);
 	}
-
-	copyMakeBorder( dst, dst, topcut_pixels, 0, 0, 0, BORDER_CONSTANT, 0 );
 
 	t2 = clock();
 	float diff = ((float)t2-(float)t1);
@@ -165,86 +153,21 @@ bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst)
 	return true;
 }
 
-// bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst)
-// {
-//
-// 	clock_t t1, t2;
-// 	t1 = clock();
-//
-// 	//Create the rectangle
-// 	cv::Rect roi(0, topcut_pixels, src.cols, src.rows - topcut_pixels);
-// 	//Create the cv::Mat with the ROI you need, where "image" is the cv::Mat you want to extract the ROI from
-// 	cv::Mat src_roi = src(roi);
-//
-// 	// cv::Mat sub_img;
-// 	// if (topcut_enable){
-// 	// 	sub_img = src(cv::Range(0, 100), cv::Range(0, 100));
-// 	// }
-//
-// 	// resize image
-// 	Mat im_resize = src.clone();
-// 	Size im_size_full(src.cols, src.rows);
-// 	if (resizePercent < 1)
-//   {
-//     Size im_size(int((float)src.cols * resizePercent),
-// 		              int((float)src.rows * resizePercent));
-//     resize(src, im_resize, im_size, 0, 0);
-//   }
-//
-// 	saliencyAlgorithm.process(im_resize);
-//
-// 	bool CENTER_BIAS = false;
-// 	if(CENTER_BIAS)
-// 		dst = saliencyAlgorithm.add_center_bias(0.00005);
-// 	else
-// 		dst = saliencyAlgorithm.get_salmap();
-//
-// 	double minVal, maxVal;
-// 	minMaxLoc(dst, &minVal, &maxVal, NULL, NULL);
-// 	if (maxVal != minVal)
-// 		dst.convertTo(dst, CV_32FC1, 1.0/(maxVal-minVal), -minVal/(maxVal-minVal)); // scale the image
-//
-// 	// re-resize saliency image to full size
-// 	if (resizePercent < 1){
-// 		resize(dst, dst, im_size_full, 0, 0);
-// 	}
-//
-// 	t2 = clock();
-// 	float diff = ((float)t2-(float)t1);
-// 	calculateTime = diff / CLOCKS_PER_SEC;
-//
-// 	return true;
-// }
-
 bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst, Mat& dst_norm, bool norm_en)
 {
 
 	clock_t t1, t2;
 	t1 = clock();
 
-	//Create the rectangle
-	cv::Rect roi(0, topcut_pixels, src.cols, src.rows - topcut_pixels);
-	//Create the cv::Mat with the ROI you need, where "image" is the cv::Mat you want to extract the ROI from
-	cv::Mat src_roi = src(roi);
-
-	// cv::Mat sub_img;
-	// if (topcut_enable){
-	// 	sub_img = src(cv::Range(0, 100), cv::Range(0, 100));
-	// }
-
-	// stringstream image_write_name;
-	// image_write_name << testFolder << "image_cut" << testImage;
-	// cv::imwrite(image_write_name.str(), src_roi);
-
 	// resize image
-	Mat im_resize = src_roi.clone();
-	Size im_size_full(src_roi.cols, src_roi.rows);
+	Mat im_resize = src.clone();
+	Size im_size_full(src.cols, src.rows);
 	if (resizePercent < 1)
-  {
-    Size im_size(int((float)src_roi.cols * resizePercent),
-		              int((float)src_roi.rows * resizePercent));
-    resize(src_roi, im_resize, im_size, 0, 0);
-  }
+	{
+		Size im_size(int((float)src.cols * resizePercent),
+						int((float)src.rows * resizePercent));
+		resize(src, im_resize, im_size, 0, 0);
+	}
 
 	saliencyAlgorithm.process(im_resize);
 
@@ -255,6 +178,10 @@ bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst, Mat& dst_
 		dst = saliencyAlgorithm.get_salmap();
 
 	double minVal, maxVal;
+	// threshold here
+	threshold( dst, dst, thresholdSaliency, maxVal, cv::THRESH_TOZERO);
+
+	// scale the image to range [0,1]
 	minMaxLoc(dst, &minVal, &maxVal, NULL, NULL);
 	if (maxVal != minVal)
 		dst.convertTo(dst, CV_32FC1, 1.0/(maxVal-minVal), -minVal/(maxVal-minVal)); // scale the image
@@ -264,19 +191,9 @@ bool saliencyMapVOCUS2::calculateSaliencyMap(const Mat& src, Mat& dst, Mat& dst_
 		resize(dst, dst, im_size_full, 0, 0);
 	}
 
-	if (norm_en){
-		Mat dst_to_norm = dst.clone();
-		dst_to_norm.convertTo(dst_to_norm, CV_8UC1,255);
-		normalizeSaliencyMap(dst_to_norm, dst_norm);
-		copyMakeBorder( dst_norm, dst_norm, topcut_pixels, 0, 0, 0, BORDER_CONSTANT, 0 );
-
-		// stringstream image_write_name1;
-		// image_write_name1 << testFolder << "image_thres" << testImage;
-		// cv::imwrite(image_write_name1.str(), dst_norm);
-
-	}
-
-	copyMakeBorder( dst, dst, topcut_pixels, 0, 0, 0, BORDER_CONSTANT, 0 );
+	// scale the image to range [0, 255] for visualization
+	Mat dst_to_norm = dst.clone();
+	dst_to_norm.convertTo(dst_norm, CV_8UC1,255);
 
 	t2 = clock();
 	float diff = ((float)t2-(float)t1);
