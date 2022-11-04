@@ -93,7 +93,8 @@ void saliencyMapVOCUS2::imageCB(const sensor_msgs::ImageConstPtr& msg_ptr)
 
 void saliencyMapVOCUS2::init(void)
 {
-	//saliencyAlgorithm.setCfg(saliencyConfig);
+	saliencyConfig.normalize = false;
+	saliencyAlgorithm.setCfg(saliencyConfig);
 }
 
 void saliencyMapVOCUS2::normalizeSaliencyMap(const Mat& src, Mat& dst)
@@ -326,6 +327,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "saliencymap");
 
 	saliencyMapVOCUS2 salmapVOCUS2;
+	salmapVOCUS2.init();
 
 	ros::spin();
 
